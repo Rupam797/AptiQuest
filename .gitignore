@@ -1,0 +1,27 @@
+# Root gitignore to coordinate subprojects
+
+# Frontend dependencies and builds
+aptitudeedge-frontend/node_modules/
+aptitudeedge-frontend/dist/
+aptitudeedge-frontend/.env
+aptitudeedge-frontend/.env.local
+
+# Backend dependencies and builds
+aptitudeedge-backend/target/
+aptitudeedge-backend/.mvn/wrapper/maven-wrapper.jar
+aptitudeedge-backend/.idea
+aptitudeedge-backend/*.iws
+aptitudeedge-backend/*.iml
+aptitudeedge-backend/*.ipr
+aptitudeedge-backend/build/
+
+# IDE configurations and OS files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
