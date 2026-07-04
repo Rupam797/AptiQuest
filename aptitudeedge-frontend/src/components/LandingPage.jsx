@@ -1,6 +1,51 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import VoxelRobot from './VoxelRobot';
+import CyberGrid from './CyberGrid';
+import PixelParticles from './PixelParticles';
+
+function DecryptText({ text, delay = 0 }) {
+  const [displayText, setDisplayText] = useState('');
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%-+*';
+
+  useEffect(() => {
+    let timer;
+    const startTimer = setTimeout(() => {
+      let index = 0;
+      const next = () => {
+        if (index > text.length) {
+          setDisplayText(text);
+          return;
+        }
+
+        let res = '';
+        for (let i = 0; i < text.length; i++) {
+          if (i < index) {
+            res += text[i];
+          } else if (text[i] === ' ') {
+            res += ' ';
+          } else {
+            res += chars[Math.floor(Math.random() * chars.length)];
+          }
+        }
+        setDisplayText(res);
+
+        index += 0.5; // step increment speed
+        timer = setTimeout(next, 25);
+      };
+
+      next();
+    }, delay);
+
+    return () => {
+      clearTimeout(startTimer);
+      clearTimeout(timer);
+    };
+  }, [text, delay]);
+
+  return <span>{displayText}</span>;
+}
+
 
 const WORLD_MAP_GRID = [
   "0000000000000011110000001111111111110000",
@@ -132,24 +177,25 @@ function LandingPage() {
       {/* Hero Section */}
       <header className="relative bg-primary-container min-h-[85vh] text-on-primary flex flex-col overflow-visible">
         <div className="absolute inset-0 bg-pixel-grid opacity-20 pointer-events-none"></div>
+        <PixelParticles />
 
         {/* Top Nav Internal */}
-        <nav className="relative z-50 flex justify-between items-start pt-10 px-margin-page w-full">
+        <nav className="relative z-50 flex justify-between items-start pt-6 px-4 md:pt-10 md:px-margin-page w-full animate-fade-in">
           <div className="flex items-start gap-3">
             <div className="w-4 h-4 bg-white mt-1 shrink-0"></div>
-            <p className="font-label-mono text-[10px] md:text-xs text-on-primary uppercase tracking-widest leading-tight">
+            <p className="font-label-mono text-[9px] md:text-xs text-on-primary uppercase tracking-widest leading-tight">
               Be Future-Ready, Build Real Skills.<br />Have Real Fun.
             </p>
           </div>
-          <div className="flex items-center gap-8 md:gap-12">
-            <div className="flex flex-col text-right font-label-mono text-xs uppercase gap-1">
+          <div className="flex items-center gap-4 md:gap-12">
+            <div className="hidden sm:flex flex-col text-right font-label-mono text-xs uppercase gap-1">
               <a href="#programs" className="hover:opacity-70 text-white">programs</a>
               <a href="#about" className="hover:opacity-70 text-white">about</a>
               <a href="#join" className="hover:opacity-70 text-white">join</a>
             </div>
             <Link
               to={isLoggedIn ? "/dashboard" : "/auth"}
-              className="border-2 border-on-primary px-5 py-3 font-label-mono text-xs pixel-corners bg-transparent text-white hover:bg-white hover:text-primary-container transition-all"
+              className="border-2 border-on-primary px-3 py-2 md:px-5 md:py-3 font-label-mono text-[10px] md:text-xs pixel-corners bg-transparent text-white hover:bg-white hover:text-primary-container transition-all"
             >
               {isLoggedIn ? "Go to Dashboard" : "Book the first lesson"}
             </Link>
@@ -162,24 +208,32 @@ function LandingPage() {
             {/* Perfectly aligned watermark and foreground titles */}
             <div className="relative inline-block w-full">
               <h1 className="absolute inset-0 font-display-pixel text-[8.5vw] md:text-[7.8vw] leading-none text-white/[0.05] uppercase tracking-tighter select-none z-0 pointer-events-none">
-                Build Your Aptitude Edge
+                <DecryptText text="Build Your Aptitude Edge" />
               </h1>
               <h1 className="font-display-pixel text-[8.5vw] md:text-[7.8vw] leading-none uppercase tracking-tighter text-white select-none z-10 relative">
-                Build Your Aptitude Edge
+                <DecryptText text="Build Your Aptitude Edge" />
               </h1>
             </div>
           </div>
         </div>
 
+        {/* Infinite scrolling 3D Cyber-Grid floor */}
+        <div className="absolute bottom-0 left-0 w-full h-[220px] overflow-hidden pointer-events-none z-0">
+          <CyberGrid />
+        </div>
+
         {/* 3D Voxel Robot - Centered in Header (behind subtitle, in front of text) */}
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[45%] pointer-events-none z-20" style={{ width: '520px', height: '580px' }}>
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[45%] pointer-events-none z-20 w-[300px] h-[340px] md:w-[520px] md:h-[580px]">
           <VoxelRobot />
         </div>
 
         {/* Description Subtitle - Centered vertically on the right */}
-        <div className="absolute right-margin-page top-1/2 -translate-y-1/2 max-w-[200px] text-left z-10 hidden md:block">
+        <div 
+          className="absolute right-margin-page top-1/2 -translate-y-1/2 max-w-[300px] text-left z-10 hidden md:block animate-fade-in-up opacity-0"
+          style={{ animationDelay: '800ms', animationFillMode: 'forwards' }}
+        >
           <p className="text-xs font-label-mono leading-relaxed opacity-90 text-white">
-            Sharpen fundamentals, spark curiosity, and get into top universities
+            A minimal, production-grade learning portal for quantitative prep, logical reasoning, and verbal tests. Practice with instant feedback and timed mock assessments.
           </p>
         </div>
 
@@ -199,27 +253,34 @@ function LandingPage() {
         <div className="absolute bg-primary-container w-4 h-4 left-[72%] bottom-[-16px] z-20 animate-bob-fast"></div>
         <div className="absolute bg-primary-container w-4 h-4 left-[90%] bottom-[-16px] z-20 animate-bob-slow"></div>
 
-        {/* Bottom Left Button (Apply now) */}
-        <div className="absolute bottom-10 left-margin-page z-30">
-          <Link
-            to={isLoggedIn ? "/dashboard" : "/auth"}
-            className="bg-primary text-white px-6 py-3 font-label-mono text-sm flex items-center justify-center gap-2 pixel-corners hover:bg-terminal-black transition-all shadow-[3px_3px_0px_#0F172A]"
+        {/* Bottom Actions Container - Stacked on mobile, split on desktop */}
+        <div className="absolute bottom-6 left-0 w-full px-6 flex flex-col sm:flex-row items-center justify-between gap-4 z-30 md:bottom-10 md:px-margin-page">
+          <div 
+            className="animate-fade-in-up opacity-0 w-full sm:w-auto"
+            style={{ animationDelay: '1000ms', animationFillMode: 'forwards' }}
           >
-            Apply now <span className="material-symbols-outlined text-sm">arrow_forward</span>
-          </Link>
-        </div>
+            <Link
+              to={isLoggedIn ? "/dashboard" : "/auth"}
+              className="bg-primary text-white px-6 py-3 font-label-mono text-sm flex items-center justify-center gap-2 pixel-corners hover:bg-terminal-black transition-all shadow-[3px_3px_0px_#0F172A] w-full sm:w-auto text-center"
+            >
+              Apply now <span className="material-symbols-outlined text-sm">arrow_forward</span>
+            </Link>
+          </div>
 
-        {/* Bottom Right Social Icons */}
-        <div className="absolute bottom-10 right-margin-page z-30 flex gap-3">
-          <a href="#" className="w-10 h-10 rounded-full border-2 border-terminal-black bg-white flex items-center justify-center text-terminal-black hover:bg-primary hover:text-white transition-all shadow-[2px_2px_0px_#0F172A]">
-            <span className="material-symbols-outlined text-xl">play_circle</span>
-          </a>
-          <a href="#" className="w-10 h-10 rounded-full border-2 border-terminal-black bg-white flex items-center justify-center text-terminal-black hover:bg-primary hover:text-white transition-all shadow-[2px_2px_0px_#0F172A]">
-            <span className="material-symbols-outlined text-xl">photo_camera</span>
-          </a>
-          <a href="#" className="w-10 h-10 rounded-full border-2 border-terminal-black bg-white flex items-center justify-center text-terminal-black hover:bg-primary hover:text-white transition-all shadow-[2px_2px_0px_#0F172A]">
-            <span className="material-symbols-outlined text-xl">language</span>
-          </a>
+          <div 
+            className="flex gap-3 animate-fade-in-up opacity-0"
+            style={{ animationDelay: '1000ms', animationFillMode: 'forwards' }}
+          >
+            <a href="#" className="w-10 h-10 rounded-full border-2 border-terminal-black bg-white flex items-center justify-center text-terminal-black hover:bg-primary hover:text-white transition-all shadow-[2px_2px_0px_#0F172A]">
+              <span className="material-symbols-outlined text-xl">play_circle</span>
+            </a>
+            <a href="#" className="w-10 h-10 rounded-full border-2 border-terminal-black bg-white flex items-center justify-center text-terminal-black hover:bg-primary hover:text-white transition-all shadow-[2px_2px_0px_#0F172A]">
+              <span className="material-symbols-outlined text-xl">photo_camera</span>
+            </a>
+            <a href="#" className="w-10 h-10 rounded-full border-2 border-terminal-black bg-white flex items-center justify-center text-terminal-black hover:bg-primary hover:text-white transition-all shadow-[2px_2px_0px_#0F172A]">
+              <span className="material-symbols-outlined text-xl">language</span>
+            </a>
+          </div>
         </div>
       </header>
 

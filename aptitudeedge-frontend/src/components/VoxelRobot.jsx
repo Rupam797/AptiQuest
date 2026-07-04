@@ -134,6 +134,12 @@ function buildRobot() {
   return result;
 }
 
+const easeOutBack = (x) => {
+  const c1 = 1.70158;
+  const c3 = c1 + 1;
+  return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2);
+};
+
 export default function VoxelRobot() {
   const canvasRef = useRef(null);
   const robotVoxels = useMemo(() => buildRobot(), []);
@@ -142,6 +148,7 @@ export default function VoxelRobot() {
   const rotation = useRef({ x: -0.3, y: -0.5 }); // current rotation in radians
   const target = useRef({ x: -0.3, y: -0.5 });   // target rotation in radians
   const floatTime = useRef(0);
+  const assembleStart = useRef(null);
 
   // Parent container dimensions and device pixel ratio tracking
   const canvasWidth = useRef(0);
@@ -191,7 +198,7 @@ export default function VoxelRobot() {
     resizeObserver.observe(parent);
 
     // Render loop
-    const render = () => {
+    const render = (timestamp) => {
       const width = canvasWidth.current;
       const height = canvasHeight.current;
       const dpr = dprRef.current;
@@ -200,6 +207,13 @@ export default function VoxelRobot() {
         animationFrameId = requestAnimationFrame(render);
         return;
       }
+
+      if (!timestamp) timestamp = performance.now();
+      if (!assembleStart.current) {
+        assembleStart.current = timestamp;
+      }
+      const elapsed = timestamp - assembleStart.current;
+      const assembleProgress = Math.min(1, elapsed / 1600); // 1.6s assembly timeline
 
       // Lerp rotation for smooth movement
       rotation.current.x += (target.current.x - rotation.current.x) * 0.08;
@@ -215,17 +229,42 @@ export default function VoxelRobot() {
 
       const centerX = width / 2;
       const centerY = height / 2 + 20; // Shift down slightly for visual balance
-      const scale = 15.5; // Voxel scale factor
+      const scale = Math.max(9.5, Math.min(15.5, width / 30)); // Dynamically scale based on canvas width
 
       const cosX = Math.cos(rotation.current.x);
       const sinX = Math.sin(rotation.current.x);
       const cosY = Math.cos(rotation.current.y);
       const sinY = Math.sin(rotation.current.y);
 
-      // Project function for a single 3D point
-      const project = (x, y, z) => {
+      // Project function for a single 3D point, keeping voxels rigid during assembly
+      const project = (x, y, z, cx = x, cy = y, cz = z) => {
         // Translate Y to apply the floating animation directly in 3D
-        const yFloat = y + floatY;
+        let yFloat = y + floatY;
+
+        // Assembly Animation
+        if (assembleProgress < 1) {
+          // Bottom-up delay: voxels at bottom assemble first.
+          // Voxel y goes from cy (approx -12) to cy+24 (approx 12).
+          const normalizedHeight = (12 - cy) / 24; // 0 at bottom, 1 at top
+          const delay = Math.max(0, Math.min(0.4, normalizedHeight * 0.4));
+          
+          const p = Math.max(0, Math.min(1, (assembleProgress - delay) / (1 - delay)));
+          const t = easeOutBack(p);
+
+          // Scattered start position based on center coordinates
+          const seedX = Math.sin(cx * 12.9898 + cy * 78.233 + cz * 43.71) * 43758.5453;
+          const offsetValX = ((seedX - Math.floor(seedX)) * 2 - 1) * 25; // range -25 to 25
+
+          const seedY = Math.sin(cx * 37.719 + cy * 54.223 + cz * 13.98) * 12753.2543;
+          const offsetValY = ((seedY - Math.floor(seedY)) * 2 - 1) * 20 - 45; // fly down from top
+
+          const seedZ = Math.sin(cx * 99.231 + cy * 11.23 + cz * 87.21) * 98754.2131;
+          const offsetValZ = ((seedZ - Math.floor(seedZ)) * 2 - 1) * 25;
+
+          x = x + offsetValX * (1 - t);
+          yFloat = yFloat + offsetValY * (1 - t);
+          z = z + offsetValZ * (1 - t);
+        }
 
         // Rotate around Y axis
         const x1 = x * cosY - z * sinY;
@@ -260,16 +299,16 @@ export default function VoxelRobot() {
 
       // 2. Render each voxel
       for (const voxel of sortedVoxels) {
-        // Project all 8 vertices of this voxel cube
+        // Project all 8 vertices of this voxel cube, passing voxel center coordinates to keep cubes rigid
         const v = [
-          project(voxel.x - 0.5, voxel.y - 0.5, voxel.z - 0.5), // v0
-          project(voxel.x + 0.5, voxel.y - 0.5, voxel.z - 0.5), // v1
-          project(voxel.x + 0.5, voxel.y + 0.5, voxel.z - 0.5), // v2
-          project(voxel.x - 0.5, voxel.y + 0.5, voxel.z - 0.5), // v3
-          project(voxel.x - 0.5, voxel.y - 0.5, voxel.z + 0.5), // v4
-          project(voxel.x + 0.5, voxel.y - 0.5, voxel.z + 0.5), // v5
-          project(voxel.x + 0.5, voxel.y + 0.5, voxel.z + 0.5), // v6
-          project(voxel.x - 0.5, voxel.y + 0.5, voxel.z + 0.5)  // v7
+          project(voxel.x - 0.5, voxel.y - 0.5, voxel.z - 0.5, voxel.x, voxel.y, voxel.z), // v0
+          project(voxel.x + 0.5, voxel.y - 0.5, voxel.z - 0.5, voxel.x, voxel.y, voxel.z), // v1
+          project(voxel.x + 0.5, voxel.y + 0.5, voxel.z - 0.5, voxel.x, voxel.y, voxel.z), // v2
+          project(voxel.x - 0.5, voxel.y + 0.5, voxel.z - 0.5, voxel.x, voxel.y, voxel.z), // v3
+          project(voxel.x - 0.5, voxel.y - 0.5, voxel.z + 0.5, voxel.x, voxel.y, voxel.z), // v4
+          project(voxel.x + 0.5, voxel.y - 0.5, voxel.z + 0.5, voxel.x, voxel.y, voxel.z), // v5
+          project(voxel.x + 0.5, voxel.y + 0.5, voxel.z + 0.5, voxel.x, voxel.y, voxel.z), // v6
+          project(voxel.x - 0.5, voxel.y + 0.5, voxel.z + 0.5, voxel.x, voxel.y, voxel.z)  // v7
         ];
 
         // Gather only visible faces for depth-sorting inside this voxel
