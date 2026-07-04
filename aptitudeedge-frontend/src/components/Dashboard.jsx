@@ -55,104 +55,96 @@ function Dashboard() {
   if (loading) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <div className="text-slate-600 font-semibold text-lg animate-pulse">Loading stats...</div>
+        <div className="text-terminal-black font-label-mono text-sm uppercase tracking-widest animate-pulse">Loading stats...</div>
       </div>
     );
   }
 
   return (
     <div className="space-y-8">
-      {/* Greeting Banner (Light Theme) */}
-      <div className="rounded-2xl bg-white px-8 py-10 text-slate-900 border border-slate-200 shadow-sm space-y-2">
-        <h1 className="text-3xl font-extrabold tracking-tight">Welcome back, {username}!</h1>
-        <p className="text-slate-500 max-w-lg text-sm leading-relaxed">
+      {/* Greeting Banner */}
+      <div className="bg-white px-8 py-10 border-2 border-terminal-black pixel-corners shadow-[4px_4px_0px_#0F172A] space-y-4">
+        <h1 className="text-3xl font-display-pixel uppercase text-terminal-black">Welcome back, {username}!</h1>
+        <p className="text-ui-slate max-w-2xl text-sm font-body-md leading-relaxed">
           Ready to sharpen your aptitude today? Practice questions, review formulas, or take timed tests to evaluate your growth.
         </p>
-        <div className="pt-4 flex gap-3">
-          <Link to="/practice" className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-lg font-semibold text-sm transition duration-150">
+        <div className="pt-2 flex gap-4">
+          <Link to="/practice" className="bg-primary hover:bg-terminal-black text-white px-5 py-3 font-label-mono text-xs uppercase border-2 border-terminal-black pixel-corners shadow-[2px_2px_0px_#0F172A] transition-all">
             Start Practice
           </Link>
-          <Link to="/tests" className="bg-white hover:bg-slate-50 text-slate-700 px-5 py-2.5 rounded-lg font-semibold text-sm border border-slate-200 transition duration-150">
+          <Link to="/tests" className="bg-white hover:bg-surface-container text-terminal-black px-5 py-3 font-label-mono text-xs uppercase border-2 border-terminal-black pixel-corners shadow-[2px_2px_0px_#0F172A] transition-all">
             Take a Test
           </Link>
         </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {/* Card 1 */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center justify-between">
+        <div className="bg-white p-6 border-2 border-terminal-black pixel-corners shadow-[3px_3px_0px_#0F172A] flex items-center justify-between">
           <div className="space-y-1">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Tests Completed</span>
-            <div className="text-3xl font-extrabold text-slate-900">{stats.testsCompleted}</div>
+            <span className="text-[10px] font-label-mono font-bold text-ui-slate uppercase tracking-wider">Tests Completed</span>
+            <div className="text-3xl font-display-pixel text-terminal-black">{stats.testsCompleted}</div>
           </div>
-          <div className="bg-blue-50 text-blue-600 p-3.5 rounded-2xl">
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-            </svg>
+          <div className="bg-primary-container/10 text-primary p-3 border-2 border-terminal-black pixel-corners-sm">
+            <span className="material-symbols-outlined text-2xl">task_alt</span>
           </div>
         </div>
         {/* Card 2 */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center justify-between">
+        <div className="bg-white p-6 border-2 border-terminal-black pixel-corners shadow-[3px_3px_0px_#0F172A] flex items-center justify-between">
           <div className="space-y-1">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Average Score</span>
-            <div className="text-3xl font-extrabold text-slate-900">{stats.averageScore}%</div>
+            <span className="text-[10px] font-label-mono font-bold text-ui-slate uppercase tracking-wider">Average Score</span>
+            <div className="text-3xl font-display-pixel text-terminal-black">{stats.averageScore}%</div>
           </div>
-          <div className="bg-emerald-50 text-emerald-600 p-3.5 rounded-2xl">
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
+          <div className="bg-primary-container/10 text-primary p-3 border-2 border-terminal-black pixel-corners-sm">
+            <span className="material-symbols-outlined text-2xl">bolt</span>
           </div>
         </div>
         {/* Card 3 */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center justify-between">
+        <div className="bg-white p-6 border-2 border-terminal-black pixel-corners shadow-[3px_3px_0px_#0F172A] flex items-center justify-between">
           <div className="space-y-1">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Bookmarked Qs</span>
-            <div className="text-3xl font-extrabold text-slate-900">{stats.bookmarksCount}</div>
+            <span className="text-[10px] font-label-mono font-bold text-ui-slate uppercase tracking-wider">Bookmarked Qs</span>
+            <div className="text-3xl font-display-pixel text-terminal-black">{stats.bookmarksCount}</div>
           </div>
-          <div className="bg-amber-50 text-amber-600 p-3.5 rounded-2xl">
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
-            </svg>
+          <div className="bg-primary-container/10 text-primary p-3 border-2 border-terminal-black pixel-corners-sm">
+            <span className="material-symbols-outlined text-2xl">star</span>
           </div>
         </div>
         {/* Card 4 */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center justify-between">
+        <div className="bg-white p-6 border-2 border-terminal-black pixel-corners shadow-[3px_3px_0px_#0F172A] flex items-center justify-between">
           <div className="space-y-1">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Available Questions</span>
-            <div className="text-3xl font-extrabold text-slate-900">{stats.totalQuestions}</div>
+            <span className="text-[10px] font-label-mono font-bold text-ui-slate uppercase tracking-wider">Available Questions</span>
+            <div className="text-3xl font-display-pixel text-terminal-black">{stats.totalQuestions}</div>
           </div>
-          <div className="bg-purple-50 text-purple-600 p-3.5 rounded-2xl">
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-            </svg>
+          <div className="bg-primary-container/10 text-primary p-3 border-2 border-terminal-black pixel-corners-sm">
+            <span className="material-symbols-outlined text-2xl">menu_book</span>
           </div>
         </div>
       </div>
 
       <div className="grid gap-8 md:grid-cols-3">
         {/* Recent Activity */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 md:col-span-2 space-y-4">
-          <h2 className="text-xl font-bold text-slate-900">Recent Test Activity</h2>
+        <div className="bg-white p-6 border-2 border-terminal-black pixel-corners shadow-[4px_4px_0px_#0F172A] md:col-span-2 space-y-4">
+          <h2 className="text-xl font-display-pixel uppercase text-terminal-black">Recent Test Activity</h2>
           {history.length === 0 ? (
-            <div className="text-center py-10 text-slate-500 text-sm">
-              No recent attempts found. Start by taking your first aptitude test!
+            <div className="text-center py-10 text-ui-slate font-label-mono text-sm uppercase">
+              No recent attempts found. Start by taking your first test!
             </div>
           ) : (
-            <div className="space-y-3.5">
+            <div className="space-y-4">
               {history.map((attempt) => (
-                <div key={attempt.id} className="flex items-center justify-between rounded-xl border border-slate-100 px-4 py-4 hover:bg-slate-50 transition">
+                <div key={attempt.id} className="flex items-center justify-between border-2 border-terminal-black p-4 bg-white hover:bg-surface-container pixel-corners shadow-[2px_2px_0px_#0F172A] transition-all">
                   <div className="space-y-1">
-                    <div className="font-semibold text-slate-800">{attempt.testName}</div>
-                    <div className="text-xs text-slate-500">
+                    <div className="font-bold text-terminal-black font-body-md">{attempt.testName}</div>
+                    <div className="text-[10px] font-label-mono text-ui-slate uppercase">
                       Submitted: {new Date(attempt.submittedAt).toLocaleDateString(undefined, {
                         month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
                       })}
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="font-extrabold text-slate-900">{attempt.score} / {attempt.totalQuestions}</div>
-                    <div className="text-xs text-emerald-600 font-semibold">
+                    <div className="font-display-pixel text-lg text-terminal-black">{attempt.score} / {attempt.totalQuestions}</div>
+                    <div className="text-[10px] font-label-mono text-primary font-bold uppercase">
                       {Math.round((attempt.score / attempt.totalQuestions) * 100)}% Correct
                     </div>
                   </div>
@@ -163,44 +155,44 @@ function Dashboard() {
         </div>
 
         {/* Quick Links / Revision Tip */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 space-y-6">
-          <h2 className="text-xl font-bold text-slate-900">Study Resources</h2>
+        <div className="bg-white p-6 border-2 border-terminal-black pixel-corners shadow-[4px_4px_0px_#0F172A] space-y-6">
+          <h2 className="text-xl font-display-pixel uppercase text-terminal-black">Study Resources</h2>
           
-          <div className="space-y-4 text-sm">
-            <Link to="/practice" className="flex items-center gap-3 p-3 rounded-xl border border-slate-100 hover:bg-emerald-50/50 hover:border-emerald-200 transition group">
-              <span className="bg-emerald-100 text-emerald-600 p-2 rounded-xl group-hover:bg-emerald-200 transition">
+          <div className="space-y-4">
+            <Link to="/practice" className="flex items-center gap-4 p-4 border-2 border-terminal-black bg-white hover:bg-surface-container pixel-corners shadow-[2px_2px_0px_#0F172A] transition-all group">
+              <span className="bg-primary text-white p-2 border border-terminal-black pixel-corners-sm">
                 🎯
               </span>
               <div>
-                <div className="font-semibold text-slate-800">Practice Arena</div>
-                <div className="text-xs text-slate-500">Practice and read solutions</div>
+                <div className="font-bold font-body-md text-terminal-black">Practice Arena</div>
+                <div className="text-[10px] font-label-mono text-ui-slate uppercase">Solve and view solutions</div>
               </div>
             </Link>
 
-            <Link to="/revision" className="flex items-center gap-3 p-3 rounded-xl border border-slate-100 hover:bg-blue-50/50 hover:border-blue-200 transition group">
-              <span className="bg-blue-100 text-blue-600 p-2 rounded-xl group-hover:bg-blue-200 transition">
+            <Link to="/revision" className="flex items-center gap-4 p-4 border-2 border-terminal-black bg-white hover:bg-surface-container pixel-corners shadow-[2px_2px_0px_#0F172A] transition-all group">
+              <span className="bg-primary text-white p-2 border border-terminal-black pixel-corners-sm">
                 ⚡
               </span>
               <div>
-                <div className="font-semibold text-slate-800">Revision Hub</div>
-                <div className="text-xs text-slate-500">Formulas, tips & concepts</div>
+                <div className="font-bold font-body-md text-terminal-black">Revision Hub</div>
+                <div className="text-[10px] font-label-mono text-ui-slate uppercase">Formulas & concept cards</div>
               </div>
             </Link>
 
-            <Link to="/bookmarks" className="flex items-center gap-3 p-3 rounded-xl border border-slate-100 hover:bg-amber-50/50 hover:border-amber-200 transition group">
-              <span className="bg-amber-100 text-amber-600 p-2 rounded-xl group-hover:bg-amber-200 transition">
+            <Link to="/bookmarks" className="flex items-center gap-4 p-4 border-2 border-terminal-black bg-white hover:bg-surface-container pixel-corners shadow-[2px_2px_0px_#0F172A] transition-all group">
+              <span className="bg-primary text-white p-2 border border-terminal-black pixel-corners-sm">
                 ⭐
               </span>
               <div>
-                <div className="font-semibold text-slate-800">My Bookmarks</div>
-                <div className="text-xs text-slate-500">Review saved questions</div>
+                <div className="font-bold font-body-md text-terminal-black">My Bookmarks</div>
+                <div className="text-[10px] font-label-mono text-ui-slate uppercase">Review flagged questions</div>
               </div>
             </Link>
           </div>
           
-          <div className="rounded-2xl bg-slate-50 p-4 border border-slate-150">
-            <div className="font-semibold text-xs text-slate-500 uppercase tracking-wider">Aptitude Hack</div>
-            <div className="mt-2 text-xs text-slate-700 italic leading-relaxed">
+          <div className="border-2 border-terminal-black p-4 bg-surface-container pixel-corners">
+            <div className="font-label-mono font-bold text-xs text-terminal-black uppercase tracking-wider">Aptitude Hack</div>
+            <div className="mt-2 text-xs text-ui-slate italic font-body-md leading-relaxed">
               "When solving Speed-Distance-Time problems, always ensure that your units are aligned. Keep all variables in km and hours, or in meters and seconds."
             </div>
           </div>

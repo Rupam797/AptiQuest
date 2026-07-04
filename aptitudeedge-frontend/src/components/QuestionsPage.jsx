@@ -47,8 +47,6 @@ function QuestionsPage() {
 
     try {
       if (isAlreadyBookmarked) {
-        // Toggle/remove bookmark can be implemented by API. 
-        // For standard UI, we call endpoint to toggle and update local state
         await api.post(`/bookmarks/${questionId}`);
         setBookmarkedIds((prev) => prev.filter((id) => id !== questionId));
         setMessage('Bookmark removed!');
@@ -81,7 +79,7 @@ function QuestionsPage() {
   if (loading) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <div className="text-slate-600 font-semibold text-lg animate-pulse">Loading practice arena...</div>
+        <div className="text-terminal-black font-label-mono text-sm uppercase tracking-widest animate-pulse">Loading practice arena...</div>
       </div>
     );
   }
@@ -89,18 +87,18 @@ function QuestionsPage() {
   return (
     <div className="space-y-8">
       {/* Header and Category Filter */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-6 border-2 border-terminal-black pixel-corners shadow-[4px_4px_0px_#0F172A]">
         <div className="space-y-1">
-          <h1 className="text-2xl font-bold text-slate-900">Practice Arena</h1>
-          <p className="text-sm text-slate-500">Pick a category, choose your answers, and learn from detailed solutions.</p>
+          <h1 className="text-2xl font-display-pixel uppercase text-terminal-black">Practice Arena</h1>
+          <p className="text-xs font-label-mono text-ui-slate uppercase">Pick a category, choose your answers, and learn from detailed solutions.</p>
         </div>
         
         <div className="flex items-center gap-3">
-          <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Category:</label>
+          <label className="text-xs font-label-mono font-bold text-terminal-black uppercase">Category:</label>
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm font-medium text-slate-700 focus:outline-none focus:ring-1 focus:ring-slate-900"
+            className="bg-surface-container border-2 border-terminal-black rounded-none px-4 py-2 text-xs font-label-mono uppercase tracking-wider text-terminal-black focus:outline-none focus:bg-white pixel-corners-sm"
           >
             {categories.map((cat) => (
               <option key={cat} value={cat}>{cat}</option>
@@ -110,15 +108,15 @@ function QuestionsPage() {
       </div>
 
       {message && (
-        <div className="fixed bottom-6 right-6 z-50 rounded-2xl bg-white text-slate-900 px-5 py-3 shadow-xl text-sm font-semibold border border-slate-200">
+        <div className="fixed bottom-6 right-6 z-50 bg-white text-terminal-black px-5 py-3 border-2 border-terminal-black pixel-corners shadow-[4px_4px_0px_#0F172A] text-xs font-label-mono uppercase">
           {message}
         </div>
       )}
 
       {/* Questions list */}
-      <div className="space-y-6">
+      <div className="space-y-8">
         {filteredQuestions.length === 0 ? (
-          <div className="bg-white rounded-2xl p-10 border border-slate-100 text-center text-slate-500">
+          <div className="bg-white p-10 border-2 border-terminal-black text-center text-ui-slate font-label-mono uppercase pixel-corners">
             No questions available for this category yet.
           </div>
         ) : (
@@ -129,37 +127,35 @@ function QuestionsPage() {
             const isCorrectAnswer = selectedOpt === q.correctAnswer;
             
             return (
-              <div key={q.id} className="bg-white rounded-3xl p-6 md:p-8 border border-slate-100 shadow-sm space-y-6 hover:shadow-md transition duration-200">
+              <div key={q.id} className="bg-white p-6 md:p-8 border-2 border-terminal-black pixel-corners shadow-[4px_4px_0px_#0F172A] space-y-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <span className="bg-slate-100 text-slate-700 text-xs font-extrabold px-3 py-1 rounded-full border border-slate-200">
-                      Q. {idx + 1}
+                    <span className="bg-primary-container/10 border border-terminal-black text-primary text-[10px] font-label-mono px-3 py-1 pixel-corners-sm uppercase font-bold">
+                      Quest {idx + 1}
                     </span>
-                    <span className="bg-emerald-50 text-emerald-700 text-xs font-semibold px-3 py-1 rounded-full">
+                    <span className="bg-primary text-white text-[10px] font-label-mono px-3 py-1 border border-terminal-black pixel-corners-sm uppercase">
                       {q.category}
                     </span>
                   </div>
                   
                   <button
                     onClick={() => handleBookmark(q.id)}
-                    className={`p-2 rounded-xl border transition ${
+                    className={`w-9 h-9 border-2 border-terminal-black flex items-center justify-center pixel-corners shadow-[2px_2px_0px_#0F172A] transition-all ${
                       isBookmarked
-                        ? 'bg-amber-50 border-amber-200 text-amber-500 hover:bg-amber-100'
-                        : 'bg-white border-slate-200 text-slate-400 hover:text-slate-600 hover:bg-slate-50'
+                        ? 'bg-amber-400 text-terminal-black'
+                        : 'bg-white text-ui-slate hover:bg-surface-container'
                     }`}
                     title={isBookmarked ? "Remove Bookmark" : "Add Bookmark"}
                   >
-                    <svg className="w-5 h-5 fill-current" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
+                    <span className="material-symbols-outlined text-lg">star</span>
                   </button>
                 </div>
 
-                <h3 className="text-lg md:text-xl font-bold text-slate-900 leading-snug">
+                <h3 className="text-lg md:text-xl font-bold text-terminal-black font-body-md leading-relaxed">
                   {q.text}
                 </h3>
 
-                <div className="grid gap-3.5 sm:grid-cols-2">
+                <div className="grid gap-4 sm:grid-cols-2">
                   {[
                     { label: 'A', text: q.optionA },
                     { label: 'B', text: q.optionB },
@@ -169,14 +165,14 @@ function QuestionsPage() {
                     const isSelected = selectedOpt === opt.text;
                     const isThisCorrect = opt.text === q.correctAnswer;
                     
-                    let btnStyle = 'border-slate-200 bg-white hover:bg-slate-50 text-slate-800';
+                    let btnStyle = 'border-terminal-black bg-white hover:bg-surface-container text-terminal-black hover:shadow-[3px_3px_0px_#0F172A] shadow-[2px_2px_0px_#0F172A]';
                     if (isAnswered) {
                       if (isThisCorrect) {
-                        btnStyle = 'border-emerald-500 bg-emerald-50 text-emerald-800 font-semibold ring-1 ring-emerald-500';
+                        btnStyle = 'border-success-green bg-emerald-50 text-emerald-950 font-bold shadow-[2px_2px_0px_#059669]';
                       } else if (isSelected) {
-                        btnStyle = 'border-red-500 bg-red-50 text-red-800 font-semibold ring-1 ring-red-500';
+                        btnStyle = 'border-error bg-red-50 text-red-950 font-bold shadow-[2px_2px_0px_#ba1a1a]';
                       } else {
-                        btnStyle = 'border-slate-100 bg-slate-50 text-slate-400 cursor-not-allowed';
+                        btnStyle = 'border-slate-200 bg-slate-50 text-slate-400 opacity-60 pointer-events-none shadow-none';
                       }
                     }
 
@@ -185,42 +181,42 @@ function QuestionsPage() {
                         key={opt.label}
                         disabled={isAnswered}
                         onClick={() => handleSelectOption(q.id, opt.text)}
-                        className={`flex items-start text-left rounded-2xl border px-5 py-4 text-sm transition duration-150 ${btnStyle}`}
+                        className={`flex items-start text-left border-2 px-5 py-4 text-sm font-body-md transition-all pixel-corners ${btnStyle}`}
                       >
-                        <span className={`font-bold mr-3 ${isAnswered ? '' : 'text-slate-400'}`}>
+                        <span className={`font-label-mono font-bold mr-3 ${isAnswered ? '' : 'text-slate-400'}`}>
                           {opt.label}.
                         </span>
-                        <span>{opt.text}</span>
+                        <span className="font-bold">{opt.text}</span>
                       </button>
                     );
                   })}
                 </div>
 
                 {isAnswered && (
-                  <div className="pt-4 border-t border-slate-100 space-y-4">
-                    <div className="flex items-center gap-3">
+                  <div className="pt-5 border-t-2 border-terminal-black space-y-4">
+                    <div className="flex items-center justify-between flex-wrap gap-2">
                       {isCorrectAnswer ? (
-                        <span className="flex items-center gap-1.5 text-sm font-semibold text-emerald-600">
-                          <span>✓ Correct Answer</span>
+                        <span className="font-label-mono text-sm font-bold text-success-green uppercase flex items-center gap-1.5">
+                          <span>✔ Correct Answer!</span>
                         </span>
                       ) : (
-                        <span className="flex items-center gap-1.5 text-sm font-semibold text-red-600">
-                          <span>✗ Incorrect Answer</span>
+                        <span className="font-label-mono text-sm font-bold text-error uppercase flex items-center gap-1.5">
+                          <span>✖ Incorrect Answer</span>
                         </span>
                       )}
                       
                       <button
                         onClick={() => toggleExplanation(q.id)}
-                        className="text-xs text-slate-500 hover:text-slate-900 underline font-semibold focus:outline-none"
+                        className="bg-terminal-black hover:bg-primary text-white px-5 py-2 font-label-mono text-xs pixel-corners shadow-[2px_2px_0px_#0F172A] transition-colors"
                       >
-                        {expandedExplanations[q.id] ? 'Hide Solution' : 'Show Solution'}
+                        {expandedExplanations[q.id] ? 'Hide Solution' : 'View Step-by-Step Solution'}
                       </button>
                     </div>
 
                     {expandedExplanations[q.id] && q.explanation && (
-                      <div className="bg-slate-50 rounded-2xl p-5 border border-slate-200/60 text-sm text-slate-800 leading-relaxed space-y-2">
-                        <div className="font-bold text-slate-900 text-xs uppercase tracking-wider">Solution:</div>
-                        <p>{q.explanation}</p>
+                      <div className="bg-surface-container border-2 border-terminal-black p-5 text-sm text-terminal-black leading-relaxed pixel-corners whitespace-pre-line">
+                        <h4 className="font-display-pixel text-base text-terminal-black mb-2">Detailed Explanation:</h4>
+                        <p className="font-body-md">{q.explanation}</p>
                       </div>
                     )}
                   </div>

@@ -3,6 +3,7 @@ package com.aptitudeedge.service;
 import com.aptitudeedge.dto.request.LoginRequest;
 import com.aptitudeedge.dto.request.RegisterRequest;
 import com.aptitudeedge.dto.response.AuthResponse;
+import com.aptitudeedge.model.RefreshToken;
 import com.aptitudeedge.model.User;
 import com.aptitudeedge.repository.UserRepository;
 import com.aptitudeedge.security.JwtUtil;
@@ -15,11 +16,13 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final RefreshTokenService refreshTokenService;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil, RefreshTokenService refreshTokenService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
+        this.refreshTokenService = refreshTokenService;
     }
 
     public AuthResponse register(RegisterRequest request) {
@@ -38,7 +41,8 @@ public class AuthService {
         User saved = userRepository.save(user);
         
         String token = jwtUtil.generateToken(saved.getUsername());
-        return new AuthResponse(token, saved.getUsername(), saved.getRole());
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(saved.getUsername());
+        return new AuthResponse(token, saved.getUsername(), saved.getRole(), refreshToken.getToken());
     }
 
     public AuthResponse authenticate(LoginRequest request) {
@@ -50,6 +54,7 @@ public class AuthService {
         }
         
         String token = jwtUtil.generateToken(user.getUsername());
-        return new AuthResponse(token, user.getUsername(), user.getRole());
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getUsername());
+        return new AuthResponse(token, user.getUsername(), user.getRole(), refreshToken.getToken());
     }
 }

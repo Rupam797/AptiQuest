@@ -28,48 +28,48 @@ function FormulasPage() {
   const renderContent = (content) => {
     return content.split('\n').map((line, idx) => {
       if (line.startsWith('### ')) {
-        return <h4 key={idx} className="text-base font-bold text-slate-900 mt-4 mb-2">{line.replace('### ', '')}</h4>;
+        return <h4 key={idx} className="text-sm font-bold text-terminal-black mt-4 mb-2 uppercase font-label-mono">{line.replace('### ', '')}</h4>;
       }
       if (line.startsWith('#### ')) {
-        return <h5 key={idx} className="text-sm font-semibold text-slate-800 mt-3 mb-1">{line.replace('#### ', '')}</h5>;
+        return <h5 key={idx} className="text-xs font-semibold text-ui-slate mt-3 mb-1 uppercase font-label-mono">{line.replace('#### ', '')}</h5>;
       }
       if (line.startsWith('- ') || line.startsWith('* ')) {
         const cleanLine = line.substring(2);
         return (
-          <li key={idx} className="list-disc list-inside ml-4 text-slate-700 mb-1">
+          <li key={idx} className="list-disc list-inside ml-4 text-terminal-black mb-1 font-body-md">
             {parseBoldText(cleanLine)}
           </li>
         );
       }
-      return <p key={idx} className="text-slate-650 leading-relaxed mb-2">{parseBoldText(line)}</p>;
+      return <p key={idx} className="text-ui-slate leading-relaxed mb-2 font-body-md">{parseBoldText(line)}</p>;
     });
   };
 
   const parseBoldText = (text) => {
     const parts = text.split(/\*\*(.*?)\*\//g);
-    return parts.map((part, i) => (i % 2 === 1 ? <strong key={i} className="text-slate-950 font-bold">{part}</strong> : part));
+    return parts.map((part, i) => (i % 2 === 1 ? <strong key={i} className="text-terminal-black font-bold">{part}</strong> : part));
   };
 
   if (loading) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <div className="text-slate-600 font-semibold text-lg animate-pulse">Loading Revision Hub...</div>
+        <div className="text-terminal-black font-label-mono text-sm uppercase tracking-widest animate-pulse">Loading Revision Hub...</div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8 animate-fadeIn">
+    <div className="space-y-8">
       {/* Header Panel */}
-      <div className="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+      <div className="bg-white p-6 md:p-8 border-2 border-terminal-black pixel-corners shadow-[4px_4px_0px_#0F172A] space-y-6">
         <div className="space-y-1">
-          <h1 className="text-2xl font-bold text-slate-900">Revision Hub & Formulas</h1>
-          <p className="text-sm text-slate-500">Quickly revise formulas, shortcuts, and key strategies for aptitude exams.</p>
+          <h1 className="text-2xl font-display-pixel uppercase text-terminal-black">Revision Hub & Formulas</h1>
+          <p className="text-xs font-label-mono text-ui-slate uppercase">Quickly revise formulas, shortcuts, and key strategies for aptitude exams.</p>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">
-            <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+            <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-ui-slate">
               🔍
             </span>
             <input
@@ -77,19 +77,19 @@ function FormulasPage() {
               placeholder="Search formulas or keywords..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-slate-900 focus:bg-white transition"
+              className="w-full bg-surface-container border-2 border-terminal-black pixel-corners pl-10 pr-4 py-3 text-xs font-label-mono uppercase tracking-wider text-terminal-black focus:bg-white focus:outline-none focus:ring-0 transition"
             />
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-2.5 rounded-xl text-xs font-semibold border transition ${
+                className={`px-4 py-2.5 border-2 border-terminal-black font-label-mono text-xs uppercase pixel-corners shadow-[2px_2px_0px_#0F172A] active:translate-y-0.5 active:shadow-[1px_1px_0px_#0F172A] transition-all ${
                   selectedCategory === cat
-                    ? 'bg-slate-900 border-slate-900 text-white shadow-sm'
-                    : 'bg-white border-slate-200 text-slate-650 hover:bg-slate-50'
+                    ? 'bg-primary text-white'
+                    : 'bg-white text-terminal-black hover:bg-surface-container'
                 }`}
               >
                 {cat}
@@ -102,19 +102,19 @@ function FormulasPage() {
       {/* Grid */}
       <div className="grid gap-6 md:grid-cols-2">
         {filteredFormulas.length === 0 ? (
-          <div className="col-span-full bg-white rounded-3xl p-12 border border-slate-100 text-center text-slate-500">
+          <div className="col-span-full bg-white border-2 border-terminal-black p-12 text-center text-ui-slate font-label-mono uppercase pixel-corners">
             No formulas found matching your search.
           </div>
         ) : (
           filteredFormulas.map((f) => (
-            <div key={f.id} className="bg-white rounded-3xl p-6 md:p-8 border border-slate-100 shadow-sm space-y-4 hover:shadow-md transition">
+            <div key={f.id} className="bg-white p-6 md:p-8 border-2 border-terminal-black pixel-corners shadow-[3px_3px_0px_#0F172A] space-y-4 hover:shadow-[4px_4px_0px_#0F172A] transition-all">
               <div className="flex justify-between items-start gap-4">
-                <h3 className="text-lg font-bold text-slate-900">{f.title}</h3>
-                <span className="bg-blue-50 text-blue-700 text-xs font-semibold px-2.5 py-1 rounded-full border border-blue-100">
+                <h3 className="text-lg font-bold text-terminal-black font-body-md uppercase">{f.title}</h3>
+                <span className="bg-primary text-white text-[10px] font-label-mono px-2.5 py-1 border border-terminal-black pixel-corners-sm uppercase">
                   {f.category}
                 </span>
               </div>
-              <div className="text-sm bg-slate-50 rounded-2xl p-5 border border-slate-200/50 space-y-1">
+              <div className="text-sm bg-surface-container border-2 border-terminal-black rounded-none p-5 pixel-corners space-y-1">
                 {renderContent(f.content)}
               </div>
             </div>
